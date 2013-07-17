@@ -7,38 +7,36 @@
 //Copyright 2013 Technical Solutions, LLC.
 //Confidential & Proprietary Information.
 
-
-//http://www.gen-x-design.com/archives/making-restful-requests-in-php/
-
-define(	'APP_NAME',			'Copilot-Client'	) ;
-define(	'APP_VERSION',		'0.1.0'				) ;
-
 namespace CP ;
+
+define(	'APP_NAME'		,	'Copilot-Client'	);
+define(	'APP_VERSION'	,	'0.1.0'				);
 
 class CP_Client
 {
-	protected $url;
-	protected $verb;
-	protected $requestBody;
-	protected $requestLength;
-	protected $username;
-	protected $password;
-	protected $acceptType;
-	protected $responseBody;
-	protected $responseInfo;
-	protected $responseData ;
+	protected 	$url			;
+	protected 	$verb			;
+	protected 	$requestBody	;
+	protected 	$requestLength	;
+	protected 	$username		;
+	protected 	$password		;
+	protected 	$acceptType		;
+	protected 	$responseBody	;
+	protected 	$responseInfo	;
+	protected 	$responseData  	;
 
 	public function __construct ($url = null, $verb = 'GET', $requestBody = null)
 	{
 		$this->url				= $url;
 		$this->verb				= $verb;
 		$this->requestBody		= $requestBody;
-		$this->requestLength		= 0;
+		$this->requestLength	= 0;
 		$this->username			= null;
 		$this->password			= null;
 		$this->acceptType		= 'application/json';
 		$this->responseBody		= null;
 		$this->responseInfo		= null;
+		$this->responseData 	= array() ;
 
 		if ($this->requestBody !== null)
 		{
@@ -111,30 +109,22 @@ class CP_Client
 
 	protected function executeGet ($ch)
 	{		
-
 		$this->doExecute($ch) ;
-
 	}
 
 	protected function executePost ($ch)
 	{
-
 		$this->doExecute($ch) ;
-
 	}
 
 	protected function executePut ($ch)
 	{
-
 		$this->doExecute($ch) ;
-
 	}
 
 	protected function executeDelete ($ch)
 	{
-
 		$this->doExecute($ch) ;
-
 	}
 
 	protected function doExecute (&$curlHandle)
@@ -169,24 +159,23 @@ class CP_Client
 
 			$this->responseData = json_decode($this->responseBody, true) ;
 
-			foreach($this->responseData['blocks'] as $entry) {
-
+			foreach($this->responseData['blocks'] as $entry)
+			{
 				echo $entry['name'], '<br><br>' ;
 
-				foreach($entry['data'] as $subentry) {
-
-					foreach($subentry as $subsubentry) {
+				foreach($entry['data'] as $subentry)
+				{
+					foreach($subentry as $subsubentry)
+					{
 						echo $subsubentry, '<br>' ;
 					}
-
 				}
-
 			}
 
-		} else {
-
+		}
+		else
+		{
 			echo "no data" ;
-
 		}
 	}
 
