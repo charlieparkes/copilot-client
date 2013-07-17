@@ -10,6 +10,9 @@
 
 //http://www.gen-x-design.com/archives/making-restful-requests-in-php/
 
+define(	'APP_NAME',			'Copilot-Client'	) ;
+define(	'APP_VERSION',		'0.1.0'				) ;
+
 namespace CP ;
 
 class CP_Client
