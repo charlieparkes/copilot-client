@@ -10,7 +10,7 @@
 namespace CP\Client ;
 
 define(	'APP_NAME'		,	'Copilot-Client'	);
-define(	'APP_VERSION'	,	'0.2.1'				);
+define(	'APP_VERSION'	,	'0.2.2'				);
 define(	'DEV'			, 	TRUE 				);
 
 /**
@@ -88,8 +88,7 @@ class request
 					throw new InvalidArgumentException('Current verb (' . $this->verb . ') is an invalid REST verb.');
 			}
 
-			//$this->decodeData() ;
-			//echo $this->responseBody ;
+			$this->decodeData() ;
 
 		}
 		catch (InvalidArgumentException $e)
@@ -194,7 +193,7 @@ Needs better error handling.
 */
 	private function decodeData()
 	{
-		if($this->responseBody !== null) {
+		if($this->responseBody !== NULL) {
 
 			$this->responseData = json_decode($this->responseBody, true) ;
 
@@ -210,9 +209,9 @@ Needs better error handling.
 	*/
 	public function getData($blockName = NULL)
 	{
-		if($blockName !== NULL && $responseData !== NULL)
+		if($blockName !== NULL && isset($this->responseData['blocks'][$blockName]) !== FALSE)
 		{
-			return $responseData['blocks'][$blockName] ;
+			return $this->responseData['blocks'][$blockName] ;
 		}
 	} 
 }
