@@ -10,8 +10,12 @@
 namespace CP\Client ;
 
 define(	'APP_NAME'		,	'Copilot-Client'	);
-define(	'APP_VERSION'	,	'0.2.0'				);
+define(	'APP_VERSION'	,	'0.2.1'				);
+define(	'DEV'			, 	TRUE 				);
 
+/**
+* This class represents one disposable call to the Copilot RESTful API.
+*/
 class request
 {
 	protected 	$url			;
@@ -25,36 +29,40 @@ class request
 	protected 	$responseInfo	;
 	protected 	$responseData  	;
 
-	public function __construct ($url = null, $verb = 'GET', $requestBody = null)
+	public function __construct ($url = NULL, $verb = 'GET', $requestBody = NULL)
 	{
-		$this->url				= $url;
-		$this->verb				= $verb;
-		$this->requestBody		= $requestBody;
-		$this->requestLength	= 0;
-		$this->username			= null;
-		$this->password			= null;
-		$this->acceptType		= 'application/json';
-		$this->responseBody		= null;
-		$this->responseInfo		= null;
-		$this->responseData 	= array() ;
+		$this->url				= $url ;
+		$this->verb				= $verb ;
+		$this->requestBody		= $requestBody ;
+		$this->requestLength	= 0 ;
+		$this->username			= NULL ;
+		$this->password			= NULL ;
+		$this->acceptType		= 'application/json' ;
+		$this->responseBody		= NULL ;
+		$this->responseInfo		= NULL ;
+		$this->responseData 	= NULL ;
 
-		if ($this->requestBody !== null)
+		if ($this->requestBody !== NULL)
 		{
 			$this->buildPostBody();
 		}
 	}
 
+	/**
 
+	*/
 	public function flush ()
 	{
-		$this->requestBody		= null;
-		$this->requestLength		= 0;
-		$this->verb				= 'GET';
-		$this->responseBody		= null;
-		$this->responseInfo		= null;
+		$this->requestBody		= NULL ;
+		$this->requestLength	= 0 ;
+		$this->verb				= 'GET' ;
+		$this->responseBody		= NULL ;
+		$this->responseInfo		= NULL ;
 	}
 
+	/**
 
+	*/
 	public function execute ()
 	{
 		$ch = curl_init();
@@ -81,8 +89,7 @@ class request
 			}
 
 			//$this->decodeData() ;
-
-			echo $this->responseBody ;
+			//echo $this->responseBody ;
 
 		}
 		catch (InvalidArgumentException $e)
@@ -98,7 +105,9 @@ class request
 
 	}
 
+	/**
 
+	*/
 	public function buildPostBody ($data = null)
 	{
 		$data = ($data !== null) ? $data : $this->requestBody;
@@ -112,31 +121,41 @@ class request
 		$this->requestBody = $data;
 	}
 
+	/**
 
+	*/
 	protected function executeGet ($ch)
 	{		
 		$this->doExecute($ch) ;
 	}
 
+	/**
 
+	*/
 	protected function executePost ($ch)
 	{
 		$this->doExecute($ch) ;
 	}
 
+	/**
 
+	*/
 	protected function executePut ($ch)
 	{
 		$this->doExecute($ch) ;
 	}
 
+	/**
 
+	*/
 	protected function executeDelete ($ch)
 	{
 		$this->doExecute($ch) ;
 	}
 
+	/**
 
+	*/
 	protected function doExecute (&$curlHandle)
 	{
 
@@ -147,7 +166,9 @@ class request
 		curl_close($curlHandle);
 	}
 
+	/**
 
+	*/
 	protected function setCurlOpts (&$curlHandle)
 	{
 		curl_setopt($curlHandle, CURLOPT_TIMEOUT, 10);
@@ -156,7 +177,9 @@ class request
 		curl_setopt($curlHandle, CURLOPT_HTTPHEADER, array ('Accept: ' . $this->acceptType));
 	}
 
+	/**
 
+	*/
 	protected function setAuth (&$curlHandle)
 	{
 		if ($this->username !== null && $this->password !== null)
@@ -166,26 +189,14 @@ class request
 		}
 	}
 
-
-	public function decodeData() {
+/**
+Needs better error handling.
+*/
+	private function decodeData()
+	{
 		if($this->responseBody !== null) {
 
 			$this->responseData = json_decode($this->responseBody, true) ;
-
-			
-			if(isset($this->responseData['blocks']) !== FALSE) foreach($this->responseData['blocks'] as $entry)
-			{
-				echo $entry['name'], '<br><br>' ;
-
-				foreach($entry['data'] as $subentry)
-				{
-					foreach($subentry as $subsubentry)
-					{
-						echo $subsubentry, '<br>' ;
-					}
-				}
-			}
-			
 
 		}
 		else
@@ -194,6 +205,16 @@ class request
 		}
 	}
 
+	/**
+
+	*/
+	public function getData($blockName = NULL)
+	{
+		if($blockName !== NULL && $responseData !== NULL)
+		{
+			return $responseData['blocks'][$blockName] ;
+		}
+	} 
 }
 
 ?>
