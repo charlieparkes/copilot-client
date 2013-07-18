@@ -7,12 +7,12 @@
 //Copyright 2013 Technical Solutions, LLC.
 //Confidential & Proprietary Information.
 
-namespace CP ;
+namespace CP\Client ;
 
 define(	'APP_NAME'		,	'Copilot-Client'	);
-define(	'APP_VERSION'	,	'0.1.0'				);
+define(	'APP_VERSION'	,	'0.2.0'				);
 
-class CP_Client
+class request
 {
 	protected 	$url			;
 	protected 	$verb			;
@@ -44,6 +44,7 @@ class CP_Client
 		}
 	}
 
+
 	public function flush ()
 	{
 		$this->requestBody		= null;
@@ -52,6 +53,7 @@ class CP_Client
 		$this->responseBody		= null;
 		$this->responseInfo		= null;
 	}
+
 
 	public function execute ()
 	{
@@ -78,7 +80,9 @@ class CP_Client
 					throw new InvalidArgumentException('Current verb (' . $this->verb . ') is an invalid REST verb.');
 			}
 
-			$this->decodeData() ;
+			//$this->decodeData() ;
+
+			echo $this->responseBody ;
 
 		}
 		catch (InvalidArgumentException $e)
@@ -94,6 +98,7 @@ class CP_Client
 
 	}
 
+
 	public function buildPostBody ($data = null)
 	{
 		$data = ($data !== null) ? $data : $this->requestBody;
@@ -107,34 +112,41 @@ class CP_Client
 		$this->requestBody = $data;
 	}
 
+
 	protected function executeGet ($ch)
 	{		
 		$this->doExecute($ch) ;
 	}
+
 
 	protected function executePost ($ch)
 	{
 		$this->doExecute($ch) ;
 	}
 
+
 	protected function executePut ($ch)
 	{
 		$this->doExecute($ch) ;
 	}
+
 
 	protected function executeDelete ($ch)
 	{
 		$this->doExecute($ch) ;
 	}
 
+
 	protected function doExecute (&$curlHandle)
 	{
+
 		$this->setCurlOpts($curlHandle);
 		$this->responseBody = curl_exec($curlHandle);
 		$this->responseInfo	= curl_getinfo($curlHandle);
 
 		curl_close($curlHandle);
 	}
+
 
 	protected function setCurlOpts (&$curlHandle)
 	{
@@ -154,12 +166,14 @@ class CP_Client
 		}
 	}
 
+
 	public function decodeData() {
 		if($this->responseBody !== null) {
 
 			$this->responseData = json_decode($this->responseBody, true) ;
 
-			foreach($this->responseData['blocks'] as $entry)
+			
+			if(isset($this->responseData['blocks']) !== FALSE) foreach($this->responseData['blocks'] as $entry)
 			{
 				echo $entry['name'], '<br><br>' ;
 
@@ -171,6 +185,7 @@ class CP_Client
 					}
 				}
 			}
+			
 
 		}
 		else
