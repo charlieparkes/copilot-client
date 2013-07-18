@@ -9,9 +9,10 @@
 
 namespace CP\Client ;
 
-define(	'APP_NAME'		,	'Copilot-Client'	);
-define(	'APP_VERSION'	,	'0.2.2'				);
-define(	'DEV'			, 	TRUE 				);
+define(	'APP_NAME'			,	'Copilot-Client'	);
+define(	'APP_VERSION'		,	'0.3.0'				);
+define(	'DEV'				, 	TRUE 				);
+define(	'APP_ERR_HANDLING'	, 	TRUE 				); // turn this off if you want to catch the exception outside of copilot.
 
 /**
 * This class represents one disposable call to the Copilot RESTful API.
@@ -29,24 +30,29 @@ class request
 	protected 	$responseInfo	;
 	protected 	$responseData  	;
 
+
+	/**
+	* CONSTRUCTOR
+	*/
 	public function __construct ($url = NULL, $verb = 'GET', $requestBody = NULL)
 	{
-		$this->url				= $url ;
-		$this->verb				= $verb ;
-		$this->requestBody		= $requestBody ;
-		$this->requestLength	= 0 ;
-		$this->username			= NULL ;
-		$this->password			= NULL ;
-		$this->acceptType		= 'application/json' ;
-		$this->responseBody		= NULL ;
-		$this->responseInfo		= NULL ;
-		$this->responseData 	= NULL ;
+		$this->url				= $url 					;
+		$this->verb				= $verb 				;
+		$this->requestBody		= $requestBody 			;
+		$this->requestLength	= 0 					;
+		$this->username			= NULL 					;
+		$this->password			= NULL 					;
+		$this->acceptType		= 'application/json' 	;
+		$this->responseBody		= NULL 					;
+		$this->responseInfo		= NULL 					;
+		$this->responseData 	= NULL 					;
 
 		if ($this->requestBody !== NULL)
 		{
 			$this->buildPostBody();
 		}
 	}
+
 
 	/**
 
@@ -59,6 +65,7 @@ class request
 		$this->responseBody		= NULL ;
 		$this->responseInfo		= NULL ;
 	}
+
 
 	/**
 
@@ -85,24 +92,39 @@ class request
 					$this->executeDelete($ch);
 					break;
 				default:
-					throw new InvalidArgumentException('Current verb (' . $this->verb . ') is an invalid REST verb.');
+					throw new \InvalidArgumentException('Current verb (' . $this->verb . ') is an invalid REST verb.');
 			}
 
 			$this->decodeData() ;
 
 		}
-		catch (InvalidArgumentException $e)
+		catch (\InvalidArgumentException $e)
 		{
 			curl_close($ch);
 			throw $e;
 		}
-		catch (Exception $e)
+		catch (\Exception $e)
 		{
 			curl_close($ch);
-			throw $e;
-		}
 
+			if(APP_ERR_HANDLING == TRUE)
+			{
+				echo "<h2>Error</h2>" ;
+				echo "<span style=\"font-weight: bold;\">Message:</span> ". $e->getMessage(), "<br><span style=\"font-weight: bold;\">Location:</span> ", $e->getFile(), " on line ", $e->getLine(), "<br>" ;
+				echo "<h3>Stack Trace:</h3>" ;
+				$errorTrace = $e->getTrace() ;
+				foreach($errorTrace as $trace)
+				{
+					echo  $trace['file'], " on line ", $trace['line'], " ", $trace['function'],  "<br>" ;
+				}
+			}
+			else
+			{
+			throw $e ;
+			}
+		}
 	}
+
 
 	/**
 
@@ -120,6 +142,7 @@ class request
 		$this->requestBody = $data;
 	}
 
+
 	/**
 
 	*/
@@ -127,6 +150,7 @@ class request
 	{		
 		$this->doExecute($ch) ;
 	}
+
 
 	/**
 
@@ -136,6 +160,7 @@ class request
 		$this->doExecute($ch) ;
 	}
 
+
 	/**
 
 	*/
@@ -143,6 +168,7 @@ class request
 	{
 		$this->doExecute($ch) ;
 	}
+
 
 	/**
 
@@ -152,18 +178,24 @@ class request
 		$this->doExecute($ch) ;
 	}
 
+
 	/**
 
 	*/
 	protected function doExecute (&$curlHandle)
 	{
-
 		$this->setCurlOpts($curlHandle);
 		$this->responseBody = curl_exec($curlHandle);
-		$this->responseInfo	= curl_getinfo($curlHandle);
 
-		curl_close($curlHandle);
+		if($this->responseBody === FALSE)
+		{
+			throw new \Exception(curl_error($curlHandle)) ;
+		} else {
+			$this->responseInfo	= curl_getinfo($curlHandle);
+			curl_close($curlHandle);
+		}
 	}
+
 
 	/**
 
@@ -175,6 +207,7 @@ class request
 		curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curlHandle, CURLOPT_HTTPHEADER, array ('Accept: ' . $this->acceptType));
 	}
+
 
 	/**
 
@@ -188,9 +221,10 @@ class request
 		}
 	}
 
-/**
-Needs better error handling.
-*/
+
+	/**
+	Needs better error handling.
+	*/
 	private function decodeData()
 	{
 		if($this->responseBody !== NULL) {
@@ -204,6 +238,7 @@ Needs better error handling.
 		}
 	}
 
+
 	/**
 
 	*/
@@ -213,7 +248,19 @@ Needs better error handling.
 		{
 			return $this->responseData['blocks'][$blockName] ;
 		}
-	} 
+	}
+
+
+	/**
+
+	*/
+	public function getAllData()
+	{
+		if($this->responseData !== NULL)
+		{
+			return $this->responseData ;
+		}
+	}
 }
 
 ?>

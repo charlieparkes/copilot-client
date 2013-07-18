@@ -15,11 +15,39 @@ class test extends request
 	*/
 	public function __construct($testableURLs = NULL)
 	{
-		if($testableURLs !== NULL)
+		$this->URLs = $testableURLs ;
+		$this->showStyles = TRUE ;
+	}
+
+
+	/**
+
+	*/
+	public function execute() {
+
+		if($this->showStyles !== FALSE) 
 		{
-			foreach($testableURLs as $URL)
+			include("copilot.style.php") ;
+		}
+
+		if($this->URLs !== NULL)
+		{
+			foreach($this->URLs as $URL)
 			{
-				echo $URL, "<br>" ;
+				echo '<h1>', $URL['type'], ' <a href="', $URL['dest'], '">', $URL['dest'], '</a></h1>' ;
+				
+				$request = new \CP\Client\request($URL['dest'], $URL['type']) ;
+				
+				try
+				{
+					$request->execute() ;
+				}
+				catch(Exception $e) // if any error is being returned directly
+				{
+					echo $e ;
+				}
+
+				print_r($request->getAllData()) ;
 			}
 		}
 	}
