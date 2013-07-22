@@ -47,7 +47,7 @@ class test extends request
 					echo $e ;
 				}
 
-				print_r($request->getAllData()) ;
+				print_r($request->getAllBlocks()) ;
 			}
 		}
 	}

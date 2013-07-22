@@ -242,7 +242,7 @@ class request
 	/**
 
 	*/
-	public function getData($blockName = NULL)
+	public function getBlock($blockName = NULL)
 	{
 		if($blockName !== NULL && isset($this->responseData['blocks'][$blockName]) !== FALSE)
 		{
@@ -254,7 +254,7 @@ class request
 	/**
 
 	*/
-	public function getAllData()
+	public function getAllBlocks()
 	{
 		if($this->responseData !== NULL)
 		{

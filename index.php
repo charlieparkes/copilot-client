@@ -9,7 +9,7 @@ require_once("copilot.client.php") ;
 
 // Example of how to get a block of data.
 
-	$users = $request->getData('users') ;
+	$users = $request->getBlock('users') ;
 
 	if($users !== NULL)
 	{
