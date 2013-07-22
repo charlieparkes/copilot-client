@@ -11,7 +11,7 @@ require_once("copilot.client.php") ;
 
 	$test = new CP\Client\test(
 								array(
-										array("dest"=>'http://localhost/copilot/v1/query',"type"=>'GET'),
+										array("route"=>'http://localhost/copilot/v1/query',"method"=>'GET'),
 									 )
 							  ) ;
 	$test->execute() ;

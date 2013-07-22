@@ -27,16 +27,16 @@ class test extends request
 
 		if($this->showStyles !== FALSE) 
 		{
-			include("copilot.style.php") ;
+			include("test.style.php") ;
 		}
 
 		if($this->URLs !== NULL)
 		{
 			foreach($this->URLs as $URL)
 			{
-				echo '<h1>', $URL['type'], ' <a href="', $URL['dest'], '">', $URL['dest'], '</a></h1>' ;
+				echo '<h1>', $URL['method'], ' <a href="', $URL['route'], '">', $URL['route'], '</a></h1>' ;
 				
-				$request = new \CP\Client\request($URL['dest'], $URL['type']) ;
+				$request = new \CP\Client\request($URL['route'], $URL['method']) ;
 				
 				try
 				{
