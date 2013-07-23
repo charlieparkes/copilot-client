@@ -36,7 +36,7 @@ class test extends request
 			{
 				echo '<h1>', $URL['method'], ' <a href="', $URL['route'], '">', $URL['route'], '</a></h1>' ;
 				
-				$request = new \CP\Client\request($URL['route'], $URL['method']) ;
+				$request = ($URL['method'] == "post" || $URL['method'] == "put") ? new \CP\Client\request($URL['route'], $URL['method'], array()) : new \CP\Client\request($URL['route'], $URL['method']) ;
 				
 				try
 				{

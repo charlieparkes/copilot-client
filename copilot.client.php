@@ -10,7 +10,7 @@
 namespace CP\Client ;
 
 define(	'APP_NAME'			,	'Copilot-Client'	);
-define(	'APP_VERSION'		,	'0.4.0'				);
+define(	'APP_VERSION'		,	'0.4.1'				);
 define(	'DEV'				, 	TRUE 				);
 define(	'APP_ERR_HANDLING'	, 	TRUE 				); // turn this off if you want to catch the exception outside of copilot.
 
@@ -135,7 +135,7 @@ class request
 
 		if (!is_array($data))
 		{
-			throw new InvalidArgumentException('Invalid data input for postBody.  Array expected');
+			throw new \InvalidArgumentException('Invalid data input for postBody.  Array expected');
 		}
 
 		$data = http_build_query($data, '', '&');
@@ -157,7 +157,15 @@ class request
 	*/
 	protected function executePost ($ch)
 	{
-		$this->doExecute($ch) ;
+		if (!is_string($this->requestBody))
+		{
+			$this->buildPostBody();
+		}
+		
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->requestBody);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		
+		$this->doExecute($ch);	
 	}
 
 
@@ -166,7 +174,24 @@ class request
 	*/
 	protected function executePut ($ch)
 	{
-		$this->doExecute($ch) ;
+		if (!is_string($this->requestBody))
+		{
+			$this->buildPostBody();
+		}
+		
+		$this->requestLength = strlen($this->requestBody);
+		
+		$fh = fopen('php://temp', 'rw+');
+		fwrite($fh, $this->requestBody);
+		rewind($fh);
+		
+		curl_setopt($ch, CURLOPT_INFILE, $fh);
+		curl_setopt($ch, CURLOPT_INFILESIZE, $this->requestLength);
+		curl_setopt($ch, CURLOPT_PUT, true);
+		
+		$this->doExecute($ch);
+		
+		fclose($fh);
 	}
 
 
@@ -175,7 +200,9 @@ class request
 	*/
 	protected function executeDelete ($ch)
 	{
-		$this->doExecute($ch) ;
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+		
+		$this->doExecute($ch);
 	}
 
 
@@ -229,7 +256,7 @@ class request
 	{
 		if($this->responseBody !== NULL) {
 
-			$this->responseData = json_decode($this->responseBody, true) ;
+			$this->responseData = $this->responseBody ;
 
 		}
 		else
@@ -261,6 +288,70 @@ class request
 			return $this->responseData ;
 		}
 	}
+
+
+	/**
+	Accessors and Mutators
+	*/
+	public function getAcceptType ()
+	{
+		return $this->acceptType;
+	} 
+	
+	public function setAcceptType ($acceptType)
+	{
+		$this->acceptType = $acceptType;
+	} 
+	
+	public function getPassword ()
+	{
+		return $this->password;
+	} 
+	
+	public function setPassword ($password)
+	{
+		$this->password = $password;
+	} 
+	
+	public function getResponseBody ()
+	{
+		return $this->responseBody;
+	} 
+	
+	public function getResponseInfo ()
+	{
+		return $this->responseInfo;
+	} 
+	
+	public function getUrl ()
+	{
+		return $this->url;
+	} 
+	
+	public function setUrl ($url)
+	{
+		$this->url = $url;
+	} 
+	
+	public function getUsername ()
+	{
+		return $this->username;
+	} 
+	
+	public function setUsername ($username)
+	{
+		$this->username = $username;
+	} 
+	
+	public function getVerb ()
+	{
+		return $this->verb;
+	} 
+	
+	public function setVerb ($verb)
+	{
+		$this->verb = $verb;
+	} 
 }
 
 ?>

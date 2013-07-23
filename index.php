@@ -11,11 +11,7 @@ require_once("copilot.client.tester.php") ;
 		//Script timer. 
 		$mtime = explode(" ",microtime());$starttime = $mtime[1] + $mtime[0];
 
-		$test = new CP\Client\test(
-									array(
-											array("route"=>"http://localhost/copilot".urldecode($_GET['route']),"method"=>urldecode($_GET['method']))
-										 )
-								  ) ;
+		$test = new CP\Client\test(array(array( "route"=>"http://localhost/copilot".urldecode($_GET['route']),"method"=>urldecode($_GET['method']) ))) ;
 		$test->execute() ;
 
 		// End the script timer.
