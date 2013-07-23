@@ -15,7 +15,7 @@ define(	'DEV'				, 	TRUE 				);
 define(	'APP_ERR_HANDLING'	, 	TRUE 				); // turn this off if you want to catch the exception outside of copilot.
 
 /**
-* This class represents one disposable call to the Copilot RESTful API.
+* An instance of this class represents one disposable call to the Copilot RESTful API.
 */
 class request
 {
