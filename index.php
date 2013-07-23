@@ -1,7 +1,7 @@
 <?php
 
-require_once("client/copilot.client.php") ;
-require_once("client/copilot.client.tester.php") ;
+require_once("copilot.client.php") ;
+require_once("copilot.client.tester.php") ;
 
 	// output routes or test a route
 	if(isset($_GET['route']) && isset($_GET['method'])) 

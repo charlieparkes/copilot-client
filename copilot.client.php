@@ -9,9 +9,9 @@
 
 namespace CP\Client ;
 
-define(	'NAME'				,	'Copilot-Client'	);
-define(	'VERSION'			,	'0.4.2'				);
-define(	'ENVIRONMENT'		, 	'DEV' 				);
+define(	'APP_NAME'			,	'Copilot-Client'	);
+define(	'APP_VERSION'		,	'0.4.1'				);
+define(	'DEV'				, 	TRUE 				);
 define(	'APP_ERR_HANDLING'	, 	TRUE 				); // turn this off if you want to catch the exception outside of copilot.
 
 /**
@@ -256,24 +256,7 @@ class request
 	{
 		if($this->responseBody !== NULL) {
 
-			$this->responseData = json_decode($this->responseBody, true) ;
-
-		}
-		else
-		{
-			echo "no data" ;
-		}
-	}
-
-
-	/**
-	Needs better error handling.
-	*/
-	public function getRawData()
-	{
-		if($this->responseBody !== NULL) {
-
-			return $this->responseBody ;
+			$this->responseData = $this->responseBody ;
 
 		}
 		else
