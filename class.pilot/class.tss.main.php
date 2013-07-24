@@ -5,122 +5,123 @@
 
 namespace pilot ;
 
-  class tss_main extends DB {
-      function get_technician_list($hide_inactive = true, $nativeCompanyID = "15") {
+class tss_main extends DB
+{
+      function get_technician_list($hide_inactive = true, $nativeCompanyID = "15")
+      {
             $data = array();
-            $req = $request = new \CP\Client\request('http://localhost/copilot/v1/users/technician', 'GET') ;
+            $req = new \CP\Client\request('http://localhost/copilot/v1/users/technician', 'GET') ;
             $req->execute() ;
             $data = $req->getBlock('technicians') ;
             return $data;
       }
       
       
-      function get_user_list($hide_inactive = true) {
+      function get_user_list($hide_inactive = true)
+      {
             $data = array();
-            $req = $request = new \CP\Client\request('http://localhost/copilot/v1/users', 'GET') ;
+            $req = new \CP\Client\request('http://localhost/copilot/v1/users', 'GET') ;
             $req->execute() ;
             $data = $req->getBlock('users') ;
             return $data;
       }
       
       /**
-      object. don't do this one yet. it's going to change friday the 12th
+      needs review
       */
-      function get_project_list($show_inactive = true) {
+      function get_project_list($show_inactive = true)
+      {
             $data = array();
-            $req = $request = new \CP\Client\request('http://localhost/copilot/v1/projects', 'GET') ;
+            $req = new \CP\Client\request('http://localhost/copilot/v1/projects', 'GET') ;
             $req->execute() ;
             $data = $req->getBlock('projects') ;
             return $data;
       }
       
       
-      function get_customer_list($show_inactive = true) {
+      function get_customer_list($show_inactive = true)
+      {
             $data = array();
-            $req = $request = new \CP\Client\request('http://localhost/copilot/v1/customers', 'GET') ;
+            $req = new \CP\Client\request('http://localhost/copilot/v1/customers', 'GET') ;
             $req->execute() ;
             $data = $req->getBlock('customers') ;
             return $data;
       }
       
-      // assorted data of distances pre defined
-      function get_distance_list($show_inactive = true) {
+      function get_distance_list($show_inactive = true)
+      {
             $data = array();
-            $req = $request = new \CP\Client\request('http://localhost/copilot/v1/definition/distance', 'GET') ;
+            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/distance', 'GET') ;
             $req->execute() ;
             $data = $req->getBlock('distance') ;
             return $data;
       }
       
-      // assorted data
-      function get_priority_list($show_inactive = true) {
+      function get_priority_list($show_inactive = true)
+      {
             $data = array();
-            $req = $request = new \CP\Client\request('http://localhost/copilot/v1/definition/priority', 'GET') ;
+            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/priority', 'GET') ;
             $req->execute() ;
             $data = $req->getBlock('priority') ;
             return $data;
       }
 
-      /**
-      getting a list of substatus of status
-      */
-      function get_substatus_list($current_status, $show_inactive = true) {
+      function get_substatus_list($current_status, $show_inactive = true)
+      {
             $data = array();
-            $req = $request = new \CP\Client\request('http://localhost/copilot/v1/definition/substatus/?&('.urlencode('status='.$current_status).')', 'GET') ;
+            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/substatus/?&('.urlencode('status='.$current_status).')', 'GET') ;
             $req->execute() ;
             $data = $req->getBlock('substatus') ;
             return $data;
       }
       
-      // assorted data
-      function get_role_list($show_inactive = true) {
+      function get_role_list($show_inactive = true)
+      {
             $data = array();
-            $req = $request = new \CP\Client\request('http://localhost/copilot/v1/definition/role', 'GET') ;
+            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/role', 'GET') ;
             $req->execute() ;
             $data = $req->getBlock('role') ;
             return $data;
       }
       
-      // AD. worktype
-      function get_service_type_list($show_inactive = true) {
+      function get_service_type_list($show_inactive = true)
+      {
             $data = array();
-            $req = $request = new \CP\Client\request('http://localhost/copilot/v1/definition/type', 'GET') ;
+            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/type', 'GET') ;
             $req->execute() ;
             $data = $req->getBlock('type') ;
             return $data;
       }
       
-      
-      // statustype AD
-      function get_status_list($show_inactive = true) {
+      function get_status_list($show_inactive = true)
+      {
             $data = array();
-            $req = $request = new \CP\Client\request('http://localhost/copilot/v1/definition/status', 'GET') ;
+            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/status', 'GET') ;
             $req->execute() ;
             $data = $req->getBlock('status') ;
             return $data;
       }
       
-      
-      // ad. states of usa
-      function get_state_list() {
+      function get_state_list()
+      {
             $data = array();
-            $req = $request = new \CP\Client\request('http://localhost/copilot/v1/definition/state', 'GET') ;
+            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/state', 'GET') ;
             $req->execute() ;
             $data = $req->getBlock('state') ;
             return $data;
       }
       
-      // ad. tabs on a ticket event
-      function get_event_tabs() {
+      function get_event_tabs()
+      {
             $data = array();
-            $req = $request = new \CP\Client\request('http://localhost/copilot/v1/event/tabs', 'GET') ;
+            $req = new \CP\Client\request('http://localhost/copilot/v1/event/tabs', 'GET') ;
             $req->execute() ;
             $data = $req->getBlock('event_tabs') ;
             return $data;
       }
       
-      
-      function get_yes_no_list() {
+      function get_yes_no_list()
+      {
             $data[0]['I'] = "1";
             $data[0]['D'] = 'Yes';
             
@@ -130,8 +131,8 @@ namespace pilot ;
             return $data;
       }
       
-      
-        function generate_password ($length = 8) {
+      function generate_password ($length = 8)
+      {
             // start with a blank password
             $password = "";
 
@@ -157,7 +158,8 @@ namespace pilot ;
         }
         
         
-        function print_errors($err_msg) {
+      function print_errors($err_msg)
+      {
             if(count($err_msg) > 0) {
                     $pcb_header = '<img src="/images/caution.png" align="absmiddle" /> <span style="color:#cc0000;">Error</span>';
                     $pcb_text = '<ul>';
@@ -173,18 +175,19 @@ namespace pilot ;
                     $post_confirm_box->print_text($pcb_header, $pcb_text);
                     
             }
-        }
+      }
         
-        /**
-        Requires input. Ticket changelog. /event/log
-        */
-        function append_to_log($id, $desc, $type = 1) {
-            $query = "INSERT INTO tss_history (tss_event_id, tss_user_id, description, timestamp, tss_history_type_id) VALUES (".$id.", ".$_SESSION['user_id'].", '".$desc."', NOW(), ".$type.")";
-            $this->query($query,1);
-        }
+      function append_to_log($id, $desc, $userid, $type = 1)
+      {
+            $data = array();
+            $req = new \CP\Client\request('http://localhost/copilot/v1/event/log/?&(id='.$id.',desc='.$desc.'user_id='.$userid.')', 'PUT') ;
+            $req->execute() ;
+            if($req->getBlock('event_log') !== NULL) $data = $req->getBlock('event_log') ;
+            return $data;
+      }
         
-        // use existing /user/:id?(first, last) call
-       function get_user_fullname($id) {
+      function get_user_fullname($id)
+      {
             $query = "SELECT CONCAT(w.first_name, ' ', w.last_name) AS D 
                                      FROM tss_user w
                                      WHERE w.id = ".$id;
@@ -197,10 +200,10 @@ namespace pilot ;
             else {
                       return 'ERROR';
             }
-       }
-       
-       // use existing user call
-       function get_user_email($id) {
+      }
+
+      function get_user_email($id)
+      {
             $query = "SELECT w.email_address AS D 
                                      FROM tss_user w
                                      WHERE w.id = ".$id;
@@ -213,10 +216,10 @@ namespace pilot ;
             else {
                       return 'ERROR';
             }
-       }
+      }
        
-       // use existing user call
-       function get_user_timezone($id) {
+      function get_user_timezone($id)
+      {
             $query = "SELECT z.timezone AS D 
                          FROM tss_user w
                          INNER JOIN tss_timezone z
@@ -231,32 +234,34 @@ namespace pilot ;
             else {
                       return 'ERROR';
             }
-       }
+      }
        
        
-       function get_popup_method() {
+      function get_popup_method()
+      {
             if($_SESSION['device_type'] == 'computer') {
                       return 'rel="shadowbox;width='.DEFAULT_SHADOWBOX_WIDTH.';height='.DEFAULT_SHADOWBOX_HEIGHT.'"';
             }
             else {
                       return 'target="_blank"';
             }
-       }
+      }
        
        
-       function get_close_window_method() {
+      function get_close_window_method()
+      {
             if($_SESSION['device_type'] == 'computer') {
                       return 'parent.location.reload();';
             }
             else {
                       return 'opener.location.reload();self.close();';
             }
-       }
+      }
        
-       // ad. timezones
-      function get_timezone_list() {
+      function get_timezone_list()
+      {
             $data = array();
-            $req = $request = new \CP\Client\request('http://localhost/copilot/v1/definition/timezone', 'GET') ;
+            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/timezone', 'GET') ;
             $req->execute() ;
             $data = $req->getBlock('timezone') ;
             return $data;
@@ -272,8 +277,9 @@ namespace pilot ;
 //            return NULL;
 //        }
        
-       // dont worry about this one
-       function is_site_billable($id) {
+      // dont worry about this one
+      function is_site_billable($id)
+      {
             $query = "SELECT w.is_billable_address AS D 
                          FROM tss_site w
                          WHERE w.id = ".$id;
@@ -286,12 +292,10 @@ namespace pilot ;
             else {
                       return false;
             }
-       }
+      }
        
-      /**
-      Passes a variable in.
-      */
-      function get_permitted_file_extensions($attachment_type) {
+      function get_permitted_file_extensions($attachment_type)
+      {
             $data = array();
               
             $query = "SELECT p.extension AS D 

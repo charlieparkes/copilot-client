@@ -1,3 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>Copilot API Tester</title>
+
+		<style>
+
+		<?php include("view/test.style.php") ; ?>
+
+		</style>
+
+	</head>
+
+	<body>
+
 <?php
 
 require_once("client/copilot.client.php") ;
@@ -32,7 +48,11 @@ require_once("client/copilot.client.tester.php") ;
 		$mtime = explode(" ",microtime());$totaltime = (($mtime[1] + $mtime[0]) - $starttime);
 
 		header('Content-Type: text/html');
-		require_once('test.html.php') ;
+		require_once('view/test.html.php') ;
 	}
 
 ?>
+
+	</body>
+
+</html>

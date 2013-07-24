@@ -7,10 +7,12 @@
 //Copyright 2013 Technical Solutions, LLC.
 //Confidential & Proprietary Information.
 
+// Need to consider adding json upstream upload.
+
 namespace CP\Client ;
 
 define(	'NAME'				,	'Copilot-Client'	);
-define(	'VERSION'			,	'0.4.1'				);
+define(	'VERSION'			,	'1.2.0'				);
 define(	'ENVIRONMENT'		, 	'DEV' 				);
 define(	'APP_ERR_HANDLING'	, 	TRUE 				); // turn this off if you want to catch the exception outside of copilot.
 
@@ -135,7 +137,8 @@ class request
 
 		if (!is_array($data))
 		{
-			throw new \InvalidArgumentException('Invalid data input for postBody.  Array expected');
+			//throw new \InvalidArgumentException('Invalid data input for postBody.  Array expected');
+			$data = array() ;
 		}
 
 		$data = http_build_query($data, '', '&');

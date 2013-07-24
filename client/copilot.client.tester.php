@@ -16,7 +16,6 @@ class test extends request
 	public function __construct($testableURLs = NULL)
 	{
 		$this->URLs = $testableURLs ;
-		$this->showStyles = TRUE ;
 	}
 
 
@@ -24,11 +23,6 @@ class test extends request
 
 	*/
 	public function execute() {
-
-		if($this->showStyles !== FALSE) 
-		{
-			include("test.style.php") ;
-		}
 
 		if($this->URLs !== NULL)
 		{
