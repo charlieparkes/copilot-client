@@ -127,6 +127,11 @@ body {
 
 <?php
 
+$workingTestsOnly = 0 ;
+$unsafeTests = 0 ;
+
+if($workingTestsOnly == TRUE)
+{
 testOutputs("get_technician_list") ;
 testOutputs("get_user_list") ;
 testOutputs("get_customer_list") ;
@@ -140,13 +145,16 @@ testOutputs("get_status_list") ;
 testOutputs("get_state_list") ;
 testOutputs("get_event_tabs") ;
 testOutputs("get_timezone_list") ;
-
-
+}
+elseif($unsafeTests == TRUE)
+{
+testOutputs("append_to_log", "tss_main", array('3262', 'DEV: Copilot log entry.', '406')) ;
+}
+else
+{
 // needs review
 
 	//testOutputs("get_project_list") ;
-	testOutputs("append_to_log", "tss_main", array('3262', 'DEV: Copilot log entry.', '406')) ;
-
 
 // needs query
 
@@ -158,6 +166,7 @@ testOutputs("get_timezone_list") ;
 
 	//testOutputs("is_site_billable") ;
 	//testOutputs("get_permitted_file_extensions") ;
+}
 
 ?>
 

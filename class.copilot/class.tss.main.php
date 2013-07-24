@@ -351,10 +351,11 @@
             }
         }
         
-        
+        // added return true and parameters.
         function append_to_log($id, $desc, $userid, $type = 1) {
             $query = "INSERT INTO tss_history (tss_event_id, tss_user_id, description, timestamp, tss_history_type_id) VALUES (".$id.", ".$userid.", '".$desc."', NOW(), ".$type.")";
             $this->query($query,1);
+            return true ;
         }
         
         

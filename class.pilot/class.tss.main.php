@@ -180,9 +180,9 @@ class tss_main extends DB
       function append_to_log($id, $desc, $userid, $type = 1)
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/event/log/?&(id='.$id.',desc='.$desc.'user_id='.$userid.')', 'PUT') ;
+            $req = new \CP\Client\request('http://localhost/copilot/v1/event/log/?&('.urlencode('id='.$id.',desc='.$desc.'userid='.$userid).')', 'PUT') ;
             $req->execute() ;
-            if($req->getBlock('event_log') !== NULL) $data = $req->getBlock('event_log') ;
+            $data = $req->getBlock('event_log') ;
             return $data;
       }
         

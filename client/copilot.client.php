@@ -12,7 +12,7 @@
 namespace CP\Client ;
 
 define(	'NAME'				,	'Copilot-Client'	);
-define(	'VERSION'			,	'1.2.0'				);
+define(	'VERSION'			,	'1.2.1'				);
 define(	'ENVIRONMENT'		, 	'DEV' 				);
 define(	'APP_ERR_HANDLING'	, 	TRUE 				); // turn this off if you want to catch the exception outside of copilot.
 
