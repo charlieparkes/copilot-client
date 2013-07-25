@@ -6,15 +6,21 @@
   class tss_user extends tss_main {
         function load($id) {
             if(is_numeric($id)) {
-                    $query = "SELECT * FROM tss_user p WHERE p.id = ".$id;
-                    $rs1 = $this->query($query);
-                    
-                    if(count($rs1) == 1) {
-                            // BIND DATABASE FIELD NAMES TO CLASS PROPERTY NAMES...
-                            foreach ($rs1[0] as $k => $v) {
-                                $this->{$k} = $v;
-                            }
-                    }
+                $query = "SELECT * FROM tss_user p WHERE p.id = ".$id;
+                $rs1 = $this->query($query);
+                
+                if(count($rs1) == 1) {
+                        // BIND DATABASE FIELD NAMES TO CLASS PROPERTY NAMES...
+                        foreach ($rs1[0] as $k => $v) {
+                            $this->{$k} = $v;
+                        }
+                }
+
+                return "User retrieved." ;
+            }
+            else
+            {
+                return "ID was malformed." ;
             }
         }
         

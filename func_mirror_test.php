@@ -127,8 +127,8 @@ body {
 
 <?php
 
-$workingTestsOnly 	= 	1 	;
-$unsafeTests 		= 	0 	;
+$workingTestsOnly 		= 	1 	;
+$unsafeWorkingTests 	= 	0 	;
 
 if($workingTestsOnly == TRUE)
 {
@@ -146,26 +146,26 @@ testOutputs("get_state_list") ;
 testOutputs("get_event_tabs") ;
 testOutputs("get_timezone_list") ;
 }
-elseif($unsafeTests == TRUE)
+elseif($unsafeWorkingTests == TRUE)
 {
-testOutputs("append_to_log", "tss_main", array('3262', 'DEV: Copilot log entry.', '406')) ;
+testOutputs("append_to_log", "tss_main", array('3262', '!DEV! Copilot log entry.', '406')) ;
 }
 else
 {
-// needs review
+//testOutputs("get_user_fullname") ; // working but require pilot class rewrite
+//testOutputs("get_user_email") ;
+//testOutputs("get_user_timezone") ;
 
-	//testOutputs("get_project_list") ;
 
-// needs query
-
-	//testOutputs("get_user_fullname") ;
-	//testOutputs("get_user_email") ;
-	//testOutputs("get_user_timezone") ;
 
 // queued
 
-	//testOutputs("is_site_billable") ;
-	//testOutputs("get_permitted_file_extensions") ;
+	//testOutputs("get_permitted_file_extensions") ; // need example
+
+// needs review
+
+	//testOutputs("get_project_list") ;
+	//testOutputs("is_site_billable") ; // going away?
 }
 
 ?>
