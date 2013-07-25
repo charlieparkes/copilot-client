@@ -127,8 +127,8 @@ body {
 
 <?php
 
-$workingTestsOnly = 0 ;
-$unsafeTests = 0 ;
+$workingTestsOnly 	= 	1 	;
+$unsafeTests 		= 	0 	;
 
 if($workingTestsOnly == TRUE)
 {
