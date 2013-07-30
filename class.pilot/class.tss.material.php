@@ -9,7 +9,7 @@ class tss_material extends tss_main {
         function load($id)
         {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/material/'.$id, 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/material/'.$id) ;
             $req->execute() ;
             $data = $req->getBlock('material') ;
             return $data;
@@ -24,7 +24,7 @@ class tss_material extends tss_main {
         
         function get_creator_name() {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/user/'.$this->tss_user_id.'?@(fullname)', 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/user/'.$this->tss_user_id.'?@(fullname)') ;
             $req->execute() ;
             $data = $req->getBlock('material_creator') ;
             return $data;

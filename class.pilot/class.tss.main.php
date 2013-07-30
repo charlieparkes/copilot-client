@@ -10,7 +10,7 @@ class tss_main extends DB
       function get_technician_list($hide_inactive = true, $nativeCompanyID = "15")
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/users/technician', 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/users/technician') ;
             $req->execute() ;
             $data = $req->getBlock('technicians') ;
             return $data;
@@ -20,7 +20,7 @@ class tss_main extends DB
       function get_user_list($hide_inactive = true)
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/users', 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/users') ;
             $req->execute() ;
             $data = $req->getBlock('users') ;
             return $data;
@@ -32,7 +32,7 @@ class tss_main extends DB
       function get_project_list($show_inactive = true)
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/projects', 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/projects') ;
             $req->execute() ;
             $data = $req->getBlock('projects') ;
             return $data;
@@ -42,7 +42,7 @@ class tss_main extends DB
       function get_customer_list($show_inactive = true)
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/customers', 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/customers') ;
             $req->execute() ;
             $data = $req->getBlock('customers') ;
             return $data;
@@ -51,7 +51,7 @@ class tss_main extends DB
       function get_distance_list($show_inactive = true)
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/distance', 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/definition/distance') ;
             $req->execute() ;
             $data = $req->getBlock('distance') ;
             return $data;
@@ -60,7 +60,7 @@ class tss_main extends DB
       function get_priority_list($show_inactive = true)
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/priority', 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/definition/priority') ;
             $req->execute() ;
             $data = $req->getBlock('priority') ;
             return $data;
@@ -69,7 +69,7 @@ class tss_main extends DB
       function get_substatus_list($current_status, $show_inactive = true)
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/substatus/?&('.urlencode('status='.$current_status).')', 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/definition/substatus/?&('.urlencode('status='.$current_status).')') ;
             $req->execute() ;
             $data = $req->getBlock('substatus') ;
             return $data;
@@ -78,7 +78,7 @@ class tss_main extends DB
       function get_role_list($show_inactive = true)
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/role', 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/definition/role') ;
             $req->execute() ;
             $data = $req->getBlock('role') ;
             return $data;
@@ -87,7 +87,7 @@ class tss_main extends DB
       function get_service_type_list($show_inactive = true)
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/type', 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/definition/type') ;
             $req->execute() ;
             $data = $req->getBlock('type') ;
             return $data;
@@ -96,7 +96,7 @@ class tss_main extends DB
       function get_status_list($show_inactive = true)
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/status', 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/definition/status') ;
             $req->execute() ;
             $data = $req->getBlock('status') ;
             return $data;
@@ -105,7 +105,7 @@ class tss_main extends DB
       function get_state_list()
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/state', 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/definition/state') ;
             $req->execute() ;
             $data = $req->getBlock('state') ;
             return $data;
@@ -114,7 +114,7 @@ class tss_main extends DB
       function get_event_tabs()
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/event/tabs', 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/event/tabs') ;
             $req->execute() ;
             $data = $req->getBlock('event_tabs') ;
             return $data;
@@ -180,7 +180,7 @@ class tss_main extends DB
       function append_to_log($id, $desc, $userid, $type = 1)
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/event/log/?&('.urlencode('id='.$id.',desc='.$desc.'userid='.$userid).')', 'PUT') ;
+            $req = new \CP\Client\request('PUT', 'http://localhost/copilot/v1/event/log/?&('.urlencode('id='.$id.',desc='.$desc.'userid='.$userid).')') ;
             $req->execute() ;
             $data = $req->getBlock('event_log') ;
             return $data;
@@ -261,7 +261,7 @@ class tss_main extends DB
       function get_timezone_list()
       {
             $data = array();
-            $req = new \CP\Client\request('http://localhost/copilot/v1/definition/timezone', 'GET') ;
+            $req = new \CP\Client\request('GET', 'http://localhost/copilot/v1/definition/timezone') ;
             $req->execute() ;
             $data = $req->getBlock('timezone') ;
             return $data;

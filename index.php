@@ -19,6 +19,9 @@
 require_once("client/copilot.client.php") ;
 require_once("client/copilot.client.tester.php") ;
 
+$test = new CP\Client\request( 'GET', "http://localhost/copilot", array(), array("a"=>"1","b"=>"2"), array("f1", "f2") );
+$test->execute() ;
+
 	// output routes or test a route
 	if(isset($_GET['route']) && isset($_GET['method'])) 
 	{
@@ -27,7 +30,7 @@ require_once("client/copilot.client.tester.php") ;
 		//Script timer. 
 		$mtime = explode(" ",microtime());$starttime = $mtime[1] + $mtime[0];
 
-		$test = new CP\Client\test(array(array( "route"=>"http://localhost/copilot".urldecode($_GET['route']),"method"=>urldecode($_GET['method']) ))) ;
+		$test = new CP\Client\test(array(array( "method"=>urldecode($_GET['method']), "route"=>"http://localhost/copilot".urldecode($_GET['route']) ))) ;
 		$test->execute() ;
 
 		// End the script timer.

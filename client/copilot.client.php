@@ -12,7 +12,7 @@
 namespace CP\Client ;
 
 define(	'NAME'				,	'Copilot-Client'	);
-define(	'VERSION'			,	'1.2.2'				);
+define(	'VERSION'			,	'1.2.3'				);
 define(	'ENVIRONMENT'		, 	'DEV' 				);
 define(	'APP_ERR_HANDLING'	, 	TRUE 				); // turn this off if you want to catch the exception outside of copilot.
 
@@ -36,7 +36,7 @@ class request
 	/**
 	* CONSTRUCTOR
 	*/
-	public function __construct ($url = NULL, $verb = 'GET', $requestBody = NULL)
+	public function __construct ($verb = 'GET', $url = NULL, $requestBody = NULL, $requestFilters = NULL, $requestFields = NULL)
 	{
 		$this->url				= $url 					;
 		$this->verb				= $verb 				;
@@ -45,13 +45,63 @@ class request
 		$this->username			= NULL 					;
 		$this->password			= NULL 					;
 		$this->acceptType		= 'application/json' 	;
+
+		$this->requestFilters 	= $requestFilters 		;
+		$this->requestFields 	= $requestFields 		;
+
 		$this->responseBody		= NULL 					;
 		$this->responseInfo		= NULL 					;
 		$this->responseData 	= NULL 					;
 
-		if ($this->requestBody !== NULL)
+
+		if ($this->requestBody !== NULL && !empty($this->requestBody))
 		{
 			$this->buildPostBody();
+		}
+
+		$append = "empty" ;
+
+		if ($this->requestFilters !== NULL && !empty($this->requestFilters))
+		{
+			$appendFilters = '&(' ;
+			$run = false ;
+			$filters = NULL ;
+			foreach($this->requestFilters as $filterKey => $filterVal)
+			{	
+				if($run) $filters .= ',' ;
+				$filters .= $filterKey . '=' . $filterVal ;
+				$run = true ;
+
+			}
+			$appendFilters .= urlencode($filters) ;
+			$appendFilters .= ')' ;
+			$this->appendFilters = $appendFilters ;
+		}
+		
+		if ($this->requestFields !== NULL && !empty($this->requestFields))
+		{
+			$appendFields = '@(' ;
+			$run = false ;
+			$fields = NULL ;
+			foreach($this->requestFields as $field)
+			{
+				if($run) $fields .= ',' ;
+				$fields .= $field ;
+				$run = true ;
+			}
+			$appendFields .= urlencode($fields) ;
+			$appendFields .= ')' ;
+			$this->appendFields = $appendFields ;
+		}
+
+		if ( ($this->requestFilters !== NULL && !empty($this->requestFilters)) && ($this->requestFields !== NULL && !empty($this->requestFields)) )
+		{
+			$append = $this->appendFilters . '::' . $this->appendFields ;
+		}
+
+		if($append !== "empty")
+		{
+			$this->url .= "?" . $append ;
 		}
 	}
 
