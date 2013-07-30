@@ -16,7 +16,7 @@
                         }
                 }
 
-                return "User retrieved." ;
+                return $rs1[0] ;
             }
             else
             {
@@ -101,7 +101,7 @@
             $mail = new PHPMail();
             
             if(DEV) {
-	           $mail->AddAddress(EMAIL_DEV.'@'.FQDN);
+               $mail->AddAddress(EMAIL_DEV.'@'.FQDN);
             }
             else {
                 $mail->AddAddress($email);
@@ -119,8 +119,8 @@
             
             // UPDATE USER DATA
             $query = "UPDATE tss_user t SET 
-            	 	    t.user_name = '".$email."', 
-            	 	    t.email_address = '".$email."', 
+                        t.user_name = '".$email."', 
+                        t.email_address = '".$email."', 
                         t.phone_number = '".$phone."', 
                         t.notes = '".$notes."', 
                         t.hourly_rate = '".$hourly_rate."', 
@@ -196,7 +196,7 @@
             $mail = new PHPMail();
             
             if(DEV) {
-	           $mail->AddAddress(EMAIL_DEV.'@'.FQDN);
+               $mail->AddAddress(EMAIL_DEV.'@'.FQDN);
             }
             else {
                 $mail->AddAddress($this->email_address);
@@ -228,9 +228,9 @@
             $data = 'Error';
             
             $query = "SELECT g.display_name AS D 
-            	 	    FROM tss_user_group c 
-            	 	    INNER JOIN tss_group g 
-            	 	    	   ON g.id = c.tss_group_id 
+                        FROM tss_user_group c 
+                        INNER JOIN tss_group g 
+                               ON g.id = c.tss_group_id 
                         WHERE c.tss_user_id = ".$this->id;
             $rs1 = $this->query($query);
             
@@ -328,7 +328,7 @@
                      $data = $rs1[0]['LL'];
                      
                      if($data != 'Never') {
-					$data = date(DATE_FORMAT, strtotime($data));
+                    $data = date(DATE_FORMAT, strtotime($data));
                      }
                      
                      return $data;
@@ -349,7 +349,7 @@
             
             
             for($z = 0; $z < count($rs1); $z++) {
-            	 	$data[] = $rs1[$z]['id'];
+                    $data[] = $rs1[$z]['id'];
             }
             
             return $data;
@@ -372,7 +372,7 @@
             
             
             for($z = 0; $z < count($rs1); $z++) {
-            	 	$data[] = $rs1[$z]['id'];
+                    $data[] = $rs1[$z]['id'];
             }
             
             return $data;
