@@ -24,12 +24,12 @@ define("DB_PW",$db_pass);
 define("DB_TIMEZONE","America/New_York");
 
 //Pilot's Edited Files
-require_once('class.pilot/class.db.php') ;
-require_once('class.pilot/class.tss.main.php') ;
+require_once('../class.pilot/class.db.php') ;
+require_once('../class.pilot/class.tss.main.php') ;
 
 //Copilot's Nearly Untouched Files
-require_once('class.copilot/class.db.php') ;
-require_once('class.copilot/class.tss.main.php') ;
+require_once('../class.copilot/class.db.php') ;
+require_once('../class.copilot/class.tss.main.php') ;
 
 
 function testOutputs($callbackFunctionName, $className = "tss_main", $args = NULL)

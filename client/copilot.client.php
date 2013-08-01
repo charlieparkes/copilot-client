@@ -21,22 +21,25 @@ define(	'APP_ERR_HANDLING'	, 	TRUE 				); // turn this off if you want to catch 
 */
 class request
 {
-	protected 	$url			;
-	protected 	$verb			;
-	protected 	$requestBody	;
-	protected 	$requestLength	;
-	protected 	$username		;
-	protected 	$password		;
-	protected 	$acceptType		;
-	protected 	$responseBody	;
-	protected 	$responseInfo	;
-	protected 	$responseData  	;
+	protected 	$url				;
+	protected 	$verb				;
+	protected 	$requestBody		;
+	protected 	$requestLength		;
+	protected 	$username			;
+	protected 	$password			;
+	protected 	$acceptType			;
+	protected	$requestFiters 		;
+	protected 	$requestFields 		;
+	protected 	$responseBody		;
+	protected 	$responseInfo		;
+	protected 	$responseData  		;
+	protected 	$URIrequestLimit 	;
 
 
 	/**
 	* CONSTRUCTOR
 	*/
-	public function __construct ($verb = 'GET', $url = NULL, $requestBody = NULL, $requestFilters = NULL, $requestFields = NULL)
+	public function __construct ($verb = 'GET', $url = NULL, $requestFilters = NULL, $requestFields = NULL, $requestBody = NULL)
 	{
 		$this->url				= $url 					;
 		$this->verb				= $verb 				;
@@ -45,6 +48,7 @@ class request
 		$this->username			= NULL 					;
 		$this->password			= NULL 					;
 		$this->acceptType		= 'application/json' 	;
+		$this->URIrequestLimit	= 2000					;
 
 		$this->requestFilters 	= $requestFilters 		;
 		$this->requestFields 	= $requestFields 		;
@@ -52,12 +56,6 @@ class request
 		$this->responseBody		= NULL 					;
 		$this->responseInfo		= NULL 					;
 		$this->responseData 	= NULL 					;
-
-
-		if ($this->requestBody !== NULL && !empty($this->requestBody))
-		{
-			$this->buildPostBody();
-		}
 
 		$append = "empty" ;
 
@@ -97,18 +95,25 @@ class request
 		if ( ($this->requestFilters !== NULL && !empty($this->requestFilters)) && ($this->requestFields !== NULL && !empty($this->requestFields)) )
 		{
 			$append = $this->appendFilters . '::' . $this->appendFields ;
+			$this->append = $append ;
 		}
 
-		if($append !== "empty")
+		if($append !== "empty" && strlen($append) < $this->URIrequestLimit)
 		{
 			$this->url .= "?" . $append ;
+		}
+		elseif(strlen($append) > $this->URIrequestLimit)
+		{
+			// full url is too long!
+		}
+
+		if ($this->requestBody !== NULL && !empty($this->requestBody))
+		{
+			$this->buildPostBody();
 		}
 	}
 
 
-	/**
-
-	*/
 	public function flush ()
 	{
 		$this->requestBody		= NULL ;
@@ -119,9 +124,6 @@ class request
 	}
 
 
-	/**
-
-	*/
 	public function execute ()
 	{
 		$ch = curl_init();
@@ -178,9 +180,6 @@ class request
 	}
 
 
-	/**
-
-	*/
 	public function buildPostBody ($data = null)
 	{
 		$data = ($data !== null) ? $data : $this->requestBody;
@@ -196,18 +195,12 @@ class request
 	}
 
 
-	/**
-
-	*/
 	protected function executeGet ($ch)
 	{		
 		$this->doExecute($ch) ;
 	}
 
 
-	/**
-
-	*/
 	protected function executePost ($ch)
 	{
 		if (!is_string($this->requestBody))
@@ -222,9 +215,6 @@ class request
 	}
 
 
-	/**
-
-	*/
 	protected function executePut ($ch)
 	{
 		if (!is_string($this->requestBody))
@@ -248,9 +238,6 @@ class request
 	}
 
 
-	/**
-
-	*/
 	protected function executeDelete ($ch)
 	{
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
@@ -259,9 +246,6 @@ class request
 	}
 
 
-	/**
-
-	*/
 	protected function doExecute (&$curlHandle)
 	{
 		$this->setCurlOpts($curlHandle);
@@ -277,9 +261,6 @@ class request
 	}
 
 
-	/**
-
-	*/
 	protected function setCurlOpts (&$curlHandle)
 	{
 		curl_setopt($curlHandle, CURLOPT_TIMEOUT, 10);
@@ -289,9 +270,6 @@ class request
 	}
 
 
-	/**
-
-	*/
 	protected function setAuth (&$curlHandle)
 	{
 		if ($this->username !== null && $this->password !== null)
@@ -302,43 +280,32 @@ class request
 	}
 
 
-	/**
-	Needs better error handling.
-	*/
 	private function decodeData()
 	{
-		if($this->responseBody !== NULL) {
-
+		if($this->responseBody !== NULL)
+		{
 			$this->responseData = json_decode($this->responseBody, true) ;
-
 		}
 		else
 		{
-			echo "no data" ;
+			return "no data" ;
 		}
 	}
 
 
-	/**
-	Needs better error handling.
-	*/
 	public function getRawData()
 	{
-		if($this->responseBody !== NULL) {
-
+		if($this->responseBody !== NULL)
+		{
 			return $this->responseBody ;
-
 		}
 		else
 		{
-			echo "no data" ;
+			return "no data" ;
 		}
 	}
 
 
-	/**
-
-	*/
 	public function getBlock($blockName = NULL)
 	{
 		if($blockName !== NULL && isset($this->responseData['blocks'][$blockName]) !== FALSE)
@@ -348,14 +315,24 @@ class request
 	}
 
 
-	/**
-
-	*/
 	public function getAllBlocks()
 	{
 		if($this->responseData !== NULL)
 		{
 			return $this->responseData ;
+		}
+	}
+
+
+	public function getRawRequest()
+	{
+		if($this->requestBody !== NULL && !empty($this->requestBody)) 
+		{
+			return $this->requestBody ;
+		}
+		else
+		{
+			return "no data" ;
 		}
 	}
 
