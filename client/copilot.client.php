@@ -12,10 +12,11 @@
 namespace CP\Client ;
 
 define(	'NAME'				,	'Copilot-Client'	);
-define(	'VERSION'			,	'1.2.3'				);
+define(	'VERSION'			,	'1.3.0'				);
 define(	'ENVIRONMENT'		, 	'DEV' 				);
 define(	'APP_ERR_HANDLING'	, 	TRUE 				); // turn this off if you want to catch the exception outside of copilot.
-
+define( 'CP_URL'			, 	'http://localhost/copilot');
+define( 'CP_DEFAULT_KEY' 	, 	'1myUyZTm28vZKqJFYTPs7ou6MOMIHu3h');
 /**
 * An instance of this class represents one disposable call to the Copilot RESTful API.
 */
@@ -28,7 +29,7 @@ class request
 	protected 	$username			;
 	protected 	$password			;
 	protected 	$acceptType			;
-	protected	$requestFiters 		;
+	protected	$requestFilters 		;
 	protected 	$requestFields 		;
 	protected 	$responseBody		;
 	protected 	$responseInfo		;
@@ -39,17 +40,17 @@ class request
 	/**
 	* CONSTRUCTOR
 	*/
-	public function __construct ($verb = 'GET', $url = NULL, $requestFilters = NULL, $requestFields = NULL, $requestBody = NULL)
+	public function __construct ($verb = 'GET', $url = NULL, $requestFilters = NULL, $requestFields = NULL)
 	{
 		$this->url				= $url 					;
 		$this->verb				= $verb 				;
-		$this->requestBody		= $requestBody 			;
 		$this->requestLength	= 0 					;
 		$this->username			= NULL 					;
 		$this->password			= NULL 					;
 		$this->acceptType		= 'application/json' 	;
 		$this->URIrequestLimit	= 2000					;
 
+		$this->requestBody		= NULL 					;
 		$this->requestFilters 	= $requestFilters 		;
 		$this->requestFields 	= $requestFields 		;
 
@@ -98,19 +99,23 @@ class request
 			$this->append = $append ;
 		}
 
-		if($append !== "empty" && strlen($append) < $this->URIrequestLimit)
+		//Concatinate URL if user didn't include it already.
+		if(strpos('http', $this->url) === FALSE)
+		{
+			$this->url = CP_URL . $this->url ;
+		}
+
+		//Build full url with complete query string.
+		if($append !== "empty" && strlen($this->url."?".$append) < $this->URIrequestLimit)
 		{
 			$this->url .= "?" . $append ;
 		}
-		elseif(strlen($append) > $this->URIrequestLimit)
-		{
-			// full url is too long!
-		}
+		
+		//Build postable data.
+		$data['FIELDS'] = ($requestFields !== NULL) ? $requestFields : "NULL" ;
+		$data['FILTERS'] = ($requestFilters !== NULL) ? $requestFilters : "NULL" ;
 
-		if ($this->requestBody !== NULL && !empty($this->requestBody))
-		{
-			$this->buildPostBody();
-		}
+		$this->requestBody = array('TOKEN'=>CP_DEFAULT_KEY, 'FIELDS'=>$data['FIELDS'], 'FILTERS'=>$data['FILTERS']) ;
 	}
 
 
@@ -180,18 +185,41 @@ class request
 	}
 
 
-	public function buildPostBody ($data = null)
+	public function obfuscate ($action, $string, $key = CP_DEFAULT_KEY)
 	{
-		$data = ($data !== null) ? $data : $this->requestBody;
+	$output = false;
 
-		if (!is_array($data))
+	$iv = md5(md5($key));
+
+	if( $action == 'encrypt' ) {
+		$output = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $string, MCRYPT_MODE_CBC, $iv);
+		$output = base64_encode($output);
+	}
+	else if( $action == 'decrypt' ){
+		$output = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($string), MCRYPT_MODE_CBC, $iv);
+		$output = rtrim($output, "");
+	}
+	return $output;
+	}
+
+
+	public function buildPostBody ()
+	{
+		//$this->requestBody = !is_array($this->requestBody) ? $this->requestBody : array() ;
+		//if (!is_array($data))
+		//$data = http_build_query($data, '', '&'); //make data safe for url
+
+		if ($this->requestBody !== NULL)
 		{
-			//throw new \InvalidArgumentException('Invalid data input for postBody.  Array expected');
-			$data = array() ;
+			$this->requestBody = $this->obfuscate('encrypt', json_encode($this->requestBody)) ;
+			$this->requestBody = http_build_query(array('QUERY'=>$this->requestBody), '', '&');
+		}
+		else
+		{
+			$this->requestBody = "NULL" ;
 		}
 
-		$data = http_build_query($data, '', '&');
-		$this->requestBody = $data;
+		//$this->requestBody = "test1=data1&test2=data2" ;
 	}
 
 
@@ -210,6 +238,10 @@ class request
 		
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->requestBody);
 		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+		    'Content-Type: application/x-www-form-urlencoded ',                                                                                
+		    'Content-Length: ' . strlen($this->requestLength))                                                                       
+		);  
 		
 		$this->doExecute($ch);	
 	}
@@ -293,6 +325,12 @@ class request
 	}
 
 
+	public function getRawRequest()
+	{
+		return $this->requestBody ;
+	}
+
+
 	public function getRawData()
 	{
 		if($this->responseBody !== NULL)
@@ -320,19 +358,6 @@ class request
 		if($this->responseData !== NULL)
 		{
 			return $this->responseData ;
-		}
-	}
-
-
-	public function getRawRequest()
-	{
-		if($this->requestBody !== NULL && !empty($this->requestBody)) 
-		{
-			return $this->requestBody ;
-		}
-		else
-		{
-			return "no data" ;
 		}
 	}
 

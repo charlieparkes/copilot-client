@@ -30,7 +30,7 @@ class test extends request
 			{
 				echo '<h1>', $URL['method'], ' <a href="', $URL['route'], '">', $URL['route'], '</a></h1>' ;
 				
-				$request = ($URL['method'] == "post" || $URL['method'] == "put") ? new \CP\Client\request($URL['method'], $URL['route'], array()) : new \CP\Client\request($URL['method'], $URL['route']) ;
+				$request = new \CP\Client\request($URL['method'], $URL['route']) ;
 				
 				try
 				{
@@ -40,8 +40,8 @@ class test extends request
 				{
 					echo $e ;
 				}
-
-				print_r($request->getAllBlocks()) ;
+				echo '<span style="color:cyan;">Request:</span> ' . $request->getRawRequest() . '</br>' ;
+				echo '<span style="color:red;">Response:</span> ' . $request->getRawData() ;
 			}
 		}
 	}
