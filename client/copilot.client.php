@@ -185,21 +185,30 @@ class request
 	}
 
 
-	public function obfuscate ($action, $string, $key = CP_DEFAULT_KEY)
+	public function obfuscate($action, $string, $key = "unset")
 	{
-	$output = false;
+		if($key !== "unset")
+		{
+			$output = false;
 
-	$iv = md5(md5($key));
+			$iv = md5(md5($key));
 
-	if( $action == 'encrypt' ) {
-		$output = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $string, MCRYPT_MODE_CBC, $iv);
-		$output = base64_encode($output);
-	}
-	else if( $action == 'decrypt' ){
-		$output = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($string), MCRYPT_MODE_CBC, $iv);
-		$output = rtrim($output, "");
-	}
-	return $output;
+			if( $action == 'encrypt' )
+			{
+				$output = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $string, MCRYPT_MODE_CBC, $iv);
+				$output = base64_encode($output);
+			}
+			else if( $action == 'decrypt' )
+			{
+				$output = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($string), MCRYPT_MODE_CBC, $iv);
+				$output = rtrim($output, "\0");
+			}
+			return $output;
+		}
+		else
+		{
+			return "INVALID KEY" ;
+		}
 	}
 
 
@@ -211,8 +220,19 @@ class request
 
 		if ($this->requestBody !== NULL)
 		{
-			$this->requestBody = $this->obfuscate('encrypt', json_encode($this->requestBody)) ;
-			$this->requestBody = http_build_query(array('QUERY'=>$this->requestBody), '', '&');
+			$token = CP_DEFAULT_KEY ;
+
+			print_r($this->requestBody) ;
+			echo "</br>" ;
+
+			$decoded_json 					= 	json_encode($this->requestBody, TRUE) ;
+
+			$endoded_json_base64 			= 	$this->obfuscate('encrypt', $decoded_json, $token) ;
+			$encoded_json_base64_urlsafe 	= 	urlencode($endoded_json_base64) ;
+
+			$this->requestBody = 'QUERY' . '=' . $encoded_json_base64_urlsafe ;
+
+			//http_build_query(array('QUERY'=>$this->requestBody), '', '&');
 		}
 		else
 		{
@@ -239,7 +259,7 @@ class request
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $this->requestBody);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
-		    'Content-Type: application/x-www-form-urlencoded ',                                                                                
+		    'Content-Type: application/json ',                                                                                
 		    'Content-Length: ' . strlen($this->requestLength))                                                                       
 		);  
 		
